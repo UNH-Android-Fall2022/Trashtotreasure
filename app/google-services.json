@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "271091619761",
+    "project_id": "trashtotreasure-2cd54",
+    "storage_bucket": "trashtotreasure-2cd54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271091619761:android:824337174011d7c9958f90",
+        "android_client_info": {
+          "package_name": "com.newhaven.trashtotreasure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271091619761-mf7qov0hptge43maml6is65f9n9qf9fb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6xrunwz2c1UIGi4yzKPlz6AIsxf7dPVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271091619761-mf7qov0hptge43maml6is65f9n9qf9fb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
