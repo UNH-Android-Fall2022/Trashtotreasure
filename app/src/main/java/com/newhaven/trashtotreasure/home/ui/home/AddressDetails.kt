@@ -1,8 +1,5 @@
 package com.newhaven.trashtotreasure.home.ui.home
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class AddressDetails(
     private val flatNo: String,
     private val landmark: String,
