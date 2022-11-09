@@ -12,4 +12,7 @@
     <string name="already_having_login">Already have An Account? <b><font color="#E85839">Login</font></b></string>
     <string name="are_you_admin">Admin</string>
     <string name="are_you_user">user</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">My Request</string>
+    <string name="title_notifications">Profile</string>
 </resources>
