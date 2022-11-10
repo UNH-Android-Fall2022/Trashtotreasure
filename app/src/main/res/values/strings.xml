@@ -15,4 +15,13 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">My Request</string>
     <string name="title_notifications">Profile</string>
+    <string name="address">Address</string>
+    <string name="flatno">Flat No</string>
+    <string name="landmark">Landmark</string>
+    <string name="city">city</string>
+    <string name="country">Country</string>
+    <string name="postal">postal</string>
+    <string name="submit">submit</string>
+    <string name="fetch_address">FetchAddress</string>
+    <string name="title_activity_trash_to_treasure">TrashToTreasureActivity</string>
 </resources>
