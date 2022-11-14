@@ -9,11 +9,16 @@
         android:id="@+id/navigation_home"
         android:name="com.newhaven.trashtotreasure.home.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_venueDetailsFragment"
+            app:destination="@id/venueDetailsFragment"
+            app:popUpTo="@id/navigation_home"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.newhaven.trashtotreasure.home.ui.dashboard.DashboardFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.home.RequestListFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
@@ -22,4 +27,14 @@
         android:name="com.newhaven.trashtotreasure.home.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/venueDetailsFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.home.VenueDetailsFragment"
+        android:label="Venue Details"
+        tools:layout="@layout/fragment_venue_details" >
+
+        <action
+            android:id="@+id/action_venueDetailsFragment_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
 </navigation>
