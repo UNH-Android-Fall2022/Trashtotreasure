@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,51 +38,73 @@ import java.util.*
      var mLastLocation: Location? = null
      internal var mCurrLocationMarker: Marker? = null
      private var mFusedLocationClient: FusedLocationProviderClient? = null
+     private lateinit var btnFetchLocation: Button
+     private lateinit var geocoder: Geocoder
+     private lateinit var addresses: List<Address>
+     var latLng: LatLng? = null
 
      private var mLocationCallback: LocationCallback = object : LocationCallback() {
          override fun onLocationResult(locationResult: LocationResult) {
              val locationList = locationResult.locations
              if (locationList.isNotEmpty()) {
-                 //The last location in the list is the newest
                  val location = locationList.last()
-                 Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude())
+                 Log.i("MapsActivity", "Location: " + location.latitude + " " + location.longitude)
                  mLastLocation = location
                  if (mCurrLocationMarker != null) {
                      mCurrLocationMarker?.remove()
                  }
 
                  //Place current location marker
-                 val latLng = LatLng(location.latitude, location.longitude)
+                  latLng = LatLng(location.latitude, location.longitude)
                  val markerOptions = MarkerOptions()
-                 markerOptions.position(latLng)
+                 markerOptions.position(latLng!!)
                  markerOptions.title("Current Position")
                  markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                  mCurrLocationMarker = mGoogleMap.addMarker(markerOptions)
 
                  //move map camera
-                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11.0F))
+                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng!!, 11.0F))
 
 
              }
          }
      }
 
+     private fun getAddressFromLocation(latLng: LatLng): Address {
+         geocoder = Geocoder(this, Locale.getDefault())
+         addresses = geocoder.getFromLocation(
+             latLng.latitude,
+             latLng.longitude,
+             1
+         )
+         val address =
+             addresses[0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+         val city = addresses[0].locality
+         val state = addresses[0].adminArea
+         val country = addresses[0].countryName
+         val postalCode = addresses[0].postalCode
+         val knownName = addresses[0].featureName
+         Toast.makeText(this, city, Toast.LENGTH_SHORT).show()
+         return  addresses[0]
+     }
+
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          setContentView(R.layout.activity_home)
-
          supportActionBar?.title = "Map Location Activity"
-
          mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
          mapFrag = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
          mapFrag?.getMapAsync(this)
+         btnFetchLocation = findViewById(R.id.btn_fetch_address)
+
+         btnFetchLocation.setOnClickListener {
+             latLng?.let { it1 -> getAddressFromLocation(it1) }
+         }
      }
 
      public override fun onPause() {
          super.onPause()
-
-         //stop location updates when Activity is no longer active
          mFusedLocationClient?.removeLocationUpdates(mLocationCallback)
      }
 
@@ -89,7 +112,6 @@ import java.util.*
      override fun onMapReady(googleMap: GoogleMap) {
          mGoogleMap = googleMap
          mGoogleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
-
          mLocationRequest = LocationRequest()
          mLocationRequest.interval = 120000 // two minute interval
          mLocationRequest.fastestInterval = 120000
@@ -126,9 +148,6 @@ import java.util.*
                      Manifest.permission.ACCESS_FINE_LOCATION
                  )
              ) {
-                 // Show an explanation to the user *asynchronously* -- don't block
-                 // this thread waiting for the user's response! After the user
-                 // sees the explanation, try again to request the permission.
                  AlertDialog.Builder(this)
                      .setTitle("Location Permission Needed")
                      .setMessage("This app needs the Location permission, please accept to use location functionality")
@@ -175,25 +194,19 @@ import java.util.*
                              Manifest.permission.ACCESS_FINE_LOCATION
                          ) == PackageManager.PERMISSION_GRANTED
                      ) {
-
                          mFusedLocationClient?.requestLocationUpdates(
                              mLocationRequest,
                              mLocationCallback,
                              Looper.myLooper()
                          )
-                         mGoogleMap.setMyLocationEnabled(true)
+                         mGoogleMap.isMyLocationEnabled = true
                      }
-
                  } else {
-
-                     // permission denied, boo! Disable the
-                     // functionality that depends on this permission.
                      Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show()
                  }
                  return
              }
-         }// other 'case' lines to check for other
-         // permissions this app might request
+         }
      }
 
      companion object {

@@ -1,6 +1,8 @@
 package com.newhaven.trashtotreasure.login
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.home.HomeActivity
+import com.newhaven.trashtotreasure.home.TrashToTreasure
 
 
 class LoginFragment : Fragment() {
@@ -84,10 +87,15 @@ class LoginFragment : Fragment() {
                     }
                 }else{
                     progressBar.visibility = View.GONE
-
-                    Toast.makeText(context, "Signed in Succesfully ", Toast.LENGTH_SHORT).show()
+                    val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("MySharedPref",
+                        Context.MODE_PRIVATE
+                    )
+                    val myEdit = sharedPreferences.edit()
+                    myEdit.putBoolean("isLogin", true)
+                    myEdit.apply()
+                    Toast.makeText(context, "Signed in Successfully ", Toast.LENGTH_SHORT).show()
                     activity?.finish()
-                    openHome()
+                  openHome()
                 }
             }
 
@@ -95,7 +103,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun openHome(){
-        val intent = Intent(activity,HomeActivity::class.java)
+        val intent = Intent(activity,TrashToTreasure::class.java)
         startActivity(intent)
     }
 
