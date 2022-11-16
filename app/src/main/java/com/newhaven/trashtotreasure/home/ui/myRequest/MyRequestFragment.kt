@@ -13,17 +13,16 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
-import com.newhaven.trashtotreasure.databinding.FragmentDashboardBinding
+import com.newhaven.trashtotreasure.databinding.FragmentMyRequestListBinding
 import com.newhaven.trashtotreasure.home.Constants
 
 
 class MyRequestFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentMyRequestListBinding? = null
     var eventList: ArrayList<Event> = ArrayList()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: RequestListAdapter
-
 
     private val binding get() = _binding!!
 
@@ -38,7 +37,7 @@ class MyRequestFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentMyRequestListBinding.inflate(inflater, container, false)
         val root: View = binding.root
         getRequestList()
         return root
