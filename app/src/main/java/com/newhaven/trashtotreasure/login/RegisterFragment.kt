@@ -1,6 +1,7 @@
 package com.newhaven.trashtotreasure.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.SignInMethodQueryResult
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
@@ -21,6 +22,7 @@ class RegisterFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var btnSignUp: Button
     private lateinit var etEmail: EditText
+    private lateinit var etName: EditText
     private lateinit var etPassword: EditText
     private lateinit var etReEnterPassword: EditText
     private lateinit var progressBar: ProgressBar
@@ -43,15 +45,16 @@ class RegisterFragment : Fragment() {
     private fun setupView(view: View) {
     btnSignUp = view.findViewById(R.id.btn_login)
         etEmail = view.findViewById<EditText>(R.id.et_user_name)
+        etName = view.findViewById<EditText>(R.id.et_display_name)
         etPassword = view.findViewById<EditText>(R.id.et_password)
         etReEnterPassword = view.findViewById<EditText>(R.id.et_confirm_password)
         progressBar = view.findViewById(R.id.progress_circular)
         already = view.findViewById(R.id.tv_already_)
         btnSignUp.setOnClickListener {
-            if (etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty() && etReEnterPassword.text.isNotEmpty()) {
+            if (etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty() && etReEnterPassword.text.isNotEmpty() && etName.text.isNotEmpty()) {
                 if (NetworkUtils.isNetworkAvailable(context)) {
                     progressBar.visibility = View.VISIBLE
-                    createAccount(etEmail.text.toString(), etPassword.text.toString())
+                    createAccount(etEmail.text.toString(), etPassword.text.toString(), etName.text.toString())
                 } else
                     Toast.makeText(context, "No Internet Connectivity", Toast.LENGTH_SHORT).show()
             }else
@@ -83,13 +86,23 @@ class RegisterFragment : Fragment() {
         return isNewUser
     }
 
-    private fun createAccount(email: String, password: String) {
+    private fun createAccount(email: String, password: String,name :String) {
       //  if(checkUserIsExistOrNot(email)) {
             auth.createUserWithEmailAndPassword(email, password)
 
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+
+                        val profileUpdates: UserProfileChangeRequest =
+                            UserProfileChangeRequest.Builder()
+                                .setDisplayName(name).build()
+                        user!!.updateProfile(profileUpdates)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d( "User","User profile updated.")
+                                }
+                            }
                         Toast.makeText(context, "User signup successfully.", Toast.LENGTH_SHORT)
                             .show()
                         progressBar.visibility = View.GONE
