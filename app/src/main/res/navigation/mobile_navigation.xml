@@ -18,15 +18,15 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.newhaven.trashtotreasure.home.ui.home.RequestListFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.myRequest.MyRequestFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_my_request_list" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.newhaven.trashtotreasure.home.ui.notifications.NotificationsFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/venueDetailsFragment"
         android:name="com.newhaven.trashtotreasure.home.ui.home.VenueDetailsFragment"
