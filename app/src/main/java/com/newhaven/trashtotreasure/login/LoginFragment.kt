@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
-import com.newhaven.trashtotreasure.home.HomeActivity
 import com.newhaven.trashtotreasure.home.TrashToTreasure
 
 
