@@ -2,20 +2,25 @@ package com.newhaven.trashtotreasure.home.ui.profile
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
-import com.newhaven.trashtotreasure.databinding.FragmentNotificationsBinding
+import com.newhaven.trashtotreasure.databinding.FragmentProfileBinding
+import com.newhaven.trashtotreasure.home.Constants
 import com.newhaven.trashtotreasure.home.TrashToTreasure
 
 class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private var _binding: FragmentProfileBinding? = null
+    private var db : FirebaseFirestore? =null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,8 +39,9 @@ class ProfileFragment : Fragment() {
     ): View {
 
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        db  = FirebaseFirestore.getInstance()
         setData()
         return root
     }
@@ -81,17 +87,30 @@ class ProfileFragment : Fragment() {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_profile);
 
-        val etFlatNo = dialog.findViewById<EditText>(R.id.etName)
-        val etCity = dialog.findViewById<EditText>(R.id.etPhone)
-        val etCountry = dialog.findViewById<EditText>(R.id.et_mobile)
-        val etPostalCode = dialog.findViewById<EditText>(R.id.etHome)
-        val etLandMark = dialog.findViewById<EditText>(R.id.etEmail)
+        val etName = dialog.findViewById<EditText>(R.id.etName)
+        val etPhone = dialog.findViewById<EditText>(R.id.etPhone)
+        val etMobile = dialog.findViewById<EditText>(R.id.et_mobile)
+        val etHome = dialog.findViewById<EditText>(R.id.etHome)
+        val etEmail = dialog.findViewById<EditText>(R.id.etEmail)
         dialog.findViewById<Button>(R.id.submit).setOnClickListener {
-            dialog.dismiss()
+            val profileDetails = hashMapOf(
+                "name" to etName.text.toString(),
+                "phone" to etPhone.text.toString(),
+                "mobile" to etMobile.text.toString(),
+                "home" to etHome.text.toString(),
+                "email" to etEmail.text.toString()
+            )
+
+            db?.collection(Constants.PROFILEDETAILS)?.document()?.set(profileDetails)?.addOnSuccessListener {
+                Log.d(Constants.EVENTDETAILS , "Saved Successfully")
+                dialog.dismiss()
+//                findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
+            }?.addOnFailureListener {
+                Log.d(Constants.EVENTDETAILS , "Failed to insert data")
+                dialog.dismiss()
+            }
         }
         dialog.show();
-
-
     }
 
 }
