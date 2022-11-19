@@ -32,6 +32,8 @@ class MyRequestFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,6 +44,7 @@ class MyRequestFragment : Fragment() {
         getRequestList()
         return root
     }
+
 
     private fun getRequestList() {
         binding.progressCircular.visibility = View.VISIBLE
@@ -64,6 +67,7 @@ class MyRequestFragment : Fragment() {
                         }
                     }
                 }
+
                 binding.progressCircular.visibility = View.GONE
                 linearLayoutManager = LinearLayoutManager(requireContext())
                 binding.rvEvents.layoutManager = linearLayoutManager
@@ -74,6 +78,7 @@ class MyRequestFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
             }
 
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -81,6 +86,7 @@ class MyRequestFragment : Fragment() {
         inflater.inflate(R.menu.main_menu,menu)
         menu.findItem(R.id.menu_main_setting).isVisible = false
     }
+
 
 }
 

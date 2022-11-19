@@ -1,8 +1,6 @@
 package com.newhaven.trashtotreasure.home.ui.myRequest
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color.red
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +9,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.newhaven.trashtotreasure.R
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 class RequestListAdapter(val context: Context,val eventList: List<Event>) :
     RecyclerView.Adapter<RequestListAdapter.VHViewHolder>() {
@@ -51,6 +48,8 @@ class RequestListAdapter(val context: Context,val eventList: List<Event>) :
 
 
     }
+
+
 
     override fun getItemCount(): Int {
         return eventList.size
