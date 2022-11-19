@@ -32,6 +32,9 @@ class ProfileFragment : Fragment() {
     }
 
 
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,6 +60,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -80,6 +85,8 @@ class ProfileFragment : Fragment() {
 
     }
 
+
+
     private fun showDialog() {
 
         val dialog = Dialog(activity as TrashToTreasure)
@@ -101,6 +108,7 @@ class ProfileFragment : Fragment() {
                 "email" to etEmail.text.toString()
             )
 
+
             db?.collection(Constants.PROFILEDETAILS)?.document()?.set(profileDetails)?.addOnSuccessListener {
                 Log.d(Constants.EVENTDETAILS , "Saved Successfully")
                 dialog.dismiss()
@@ -112,5 +120,6 @@ class ProfileFragment : Fragment() {
         }
         dialog.show();
     }
+
 
 }
