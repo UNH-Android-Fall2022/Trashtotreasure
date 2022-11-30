@@ -1,74 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="400dp"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_constraintTop_toTopOf="parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
-    android:paddingBottom="20dp">
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="350dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/thanku"
-        android:textColor="@color/purple_500"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:id="@+id/tv_Address"
-        />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_text"
-        android:layout_width="350dp"
+        <TextView
+            android:id="@+id/tv_Address"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/thanku"
+            android:textColor="@color/purple_500"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_Address"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/confirm"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_Address" />
+
+
+        <TextView
+            android:id="@+id/tv_text_agent"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_text"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/confirm_agent"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_text" />
+
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_text_agent"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/ok"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_text_agent" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/tv_Address"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/confirm"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:lineSpacingExtra="3dp"
-        />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 
-    <TextView
-        android:id="@+id/tv_text_agent"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/tv_text"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/confirm_agent"
-        android:textSize="18sp"
-        android:lineSpacingExtra="3dp"
-        />
-
-
-
-
-
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_text_agent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:text="@string/ok"/>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
