@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_plan">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -20,7 +20,11 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.newhaven.trashtotreasure.home.ui.myRequest.MyRequestFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_my_request_list" />
+        tools:layout="@layout/fragment_my_request_list" >
+        <action
+            android:id="@+id/action_navigation_dashboard_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -35,6 +39,28 @@
 
         <action
             android:id="@+id/action_venueDetailsFragment_to_navigation_dashboard"
-            app:destination="@id/navigation_dashboard" />
+            app:destination="@id/navigation_dashboard"
+            app:popUpTo="@id/venueDetailsFragment"
+            />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_plan"
+        android:name="com.newhaven.trashtotreasure.home.PlanEventFragment"
+        android:label="PlanEvent"
+        tools:layout="@layout/fragment_plan_event" >
+
+        <action
+            android:id="@+id/action_planEventFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+           />
+
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.messages.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat"/>
+
+
 </navigation>
