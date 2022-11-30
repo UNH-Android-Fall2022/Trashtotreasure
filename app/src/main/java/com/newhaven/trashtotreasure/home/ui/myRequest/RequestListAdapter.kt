@@ -10,16 +10,21 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.newhaven.trashtotreasure.R
 
-class RequestListAdapter(val context: Context,val eventList: List<Event>) :
+class RequestListAdapter(
+    val context: Context,
+    val eventList: List<Event>,
+    val onContactUsClick: OnContactUsClick
+) :
     RecyclerView.Adapter<RequestListAdapter.VHViewHolder>() {
 
 
     class VHViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+        val eId: TextView = itemView.findViewById(R.id.tv_reqId)
         val eName: TextView = itemView.findViewById(R.id.tv_eventName)
         val eAddress: TextView = itemView.findViewById(R.id.tv_address)
         val eContact: TextView = itemView.findViewById(R.id.contact_Number)
         val eStatus: TextView = itemView.findViewById(R.id.status)
-
+        val tvContact: TextView = itemView.findViewById(R.id.contactUs)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHViewHolder {
@@ -32,23 +37,28 @@ class RequestListAdapter(val context: Context,val eventList: List<Event>) :
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: VHViewHolder, position: Int) {
+
+
         val ItemsViewModel = eventList[position]
 
         // sets the image to the imageview from our itemHolder class
 
 
         // sets the text to the textview from our itemHolder class
+        holder.eId.text = "${ItemsViewModel.eId}"
         holder.eName.text = "${ItemsViewModel.name}"
         holder.eAddress.text = "${ItemsViewModel.address}"
         holder.eContact.text = "${ItemsViewModel.contact}"
         if (ItemsViewModel.isApproved) holder.eStatus.text = "Approved" else {
 
             holder.eStatus.text = "NotApproved"
-        holder.eStatus.setTextColor(context.getColor(R.color.red))}
+            holder.eStatus.setTextColor(context.getColor(R.color.red))
+        }
 
-
+        holder.tvContact.setOnClickListener {
+            onContactUsClick.onClick()
+        }
     }
-
 
 
     override fun getItemCount(): Int {

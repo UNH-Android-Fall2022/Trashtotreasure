@@ -1,14 +1,19 @@
 package com.newhaven.trashtotreasure.home.ui.profile
 
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -16,11 +21,17 @@ import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentProfileBinding
 import com.newhaven.trashtotreasure.home.Constants
 import com.newhaven.trashtotreasure.home.TrashToTreasure
+import com.newhaven.trashtotreasure.home.ui.myRequest.Event
+import com.newhaven.trashtotreasure.login.LoginActivity
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private var db : FirebaseFirestore? =null
+    private lateinit var name:String
+    private lateinit var email:String
+    private lateinit var uid:String
+    private  var profile :Profile? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -45,18 +56,60 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
         db  = FirebaseFirestore.getInstance()
-        setData()
+        getData()
+        profile?.let { setData(it) }
         return root
     }
 
-    private fun setData() {
+    private fun getData(): Profile? {
+
+        FirebaseFirestore.getInstance().collection(Constants.PROFILEDETAILS).get()
+            .addOnSuccessListener {
+                for (documents in it.documents) {
+                    if (documents.data?.get("uid")
+                            .toString() == FirebaseAuth.getInstance().currentUser?.uid.toString()
+                    ) {
+                        if (documents != null) {
+                           profile =   Profile(
+                                documents.data?.get("name").toString(),
+                                documents.data?.get("email").toString(),
+                               documents.data?.get("mobile").toString(),
+                                documents.data?.get("landline").toString(),
+                               documents.data?.get("address").toString(),
+                            )
+                            setData(profile!!)
+                        }
+                    }
+                    break
+                }
+            }
+        return profile
+    }
+
+    private fun setData(profilee: Profile) {
         val user = Firebase.auth.currentUser
         user?.let {
             // Name, email address, and profile photo Url
-            val name = user.displayName
-            val email = user.email
+            uid = user.uid
+             name = user.displayName.toString()
+             email = user.email.toString()
             binding.tvName.text = name
             binding.tvEmail.text = email
+            binding.tvAddress.text = profilee.address
+            binding.tvMobile.text = profilee.contact
+            binding.tvHome.text = profilee.landline
+        }
+        binding.btnSignout.setOnClickListener {
+            val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("MySharedPref",
+                Context.MODE_PRIVATE
+            )
+            val myEdit = sharedPreferences.edit()
+            myEdit.putBoolean("isLogin", false)
+            myEdit.putString("uuid", "")
+            myEdit.apply()
+            activity?.finish()
+            val intent = Intent(activity,LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -101,11 +154,12 @@ class ProfileFragment : Fragment() {
         val etEmail = dialog.findViewById<EditText>(R.id.etEmail)
         dialog.findViewById<Button>(R.id.submit).setOnClickListener {
             val profileDetails = hashMapOf(
-                "name" to etName.text.toString(),
-                "phone" to etPhone.text.toString(),
-                "mobile" to etMobile.text.toString(),
-                "home" to etHome.text.toString(),
-                "email" to etEmail.text.toString()
+                "uid" to uid,
+                "name" to name,
+                "mobile" to etPhone.text.toString(),
+                "landline" to etMobile.text.toString(),
+                "address" to etHome.text.toString(),
+                "email" to email
             )
 
 
