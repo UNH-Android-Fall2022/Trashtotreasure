@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.newhaven.trashtotreasure.AdminMainActivity
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.home.TrashToTreasure
 
@@ -26,6 +28,8 @@ class LoginFragment : Fragment() {
     private lateinit var etEmail : EditText
     private lateinit var etPassword : EditText
     private lateinit var progressBar : ProgressBar
+    private lateinit var radioGroup : RadioGroup
+    private lateinit var radioButton : RadioButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +56,21 @@ class LoginFragment : Fragment() {
         etEmail = view.findViewById(R.id.et_user_name)
         etPassword = view.findViewById(R.id.et_password)
         progressBar = view.findViewById(R.id.progress_circular)
+        radioGroup = view.findViewById(R.id.rg_admin)
+
         already.setOnClickListener {
            findNavController().navigate(R.id.action_login_to_register)
         }
-        btnLogin.setOnClickListener { 
-            if(etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty())
-            signIn(etEmail.text.toString(),etPassword.text.toString())
-            else
-                Toast.makeText(context, "Please enter email and password.", Toast.LENGTH_SHORT).show()
+        btnLogin.setOnClickListener {
+            val selectedId: Int = radioGroup.checkedRadioButtonId
+            radioButton = view.findViewById(selectedId)
+                if (etEmail.text.isNotEmpty() && etPassword.text.isNotEmpty())
+                    signIn(etEmail.text.toString(), etPassword.text.toString())
+                else
+                    Toast.makeText(context, "Please enter email and password.", Toast.LENGTH_SHORT)
+                        .show()
+
+
         }
     }
     
@@ -85,20 +96,32 @@ class LoginFragment : Fragment() {
                         // Log.d(TAG, "onComplete: " + e.message)
                     }
                 }else{
+                    Log.d("radio",radioButton.text.toString())
                     progressBar.visibility = View.GONE
                     val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("MySharedPref",
                         Context.MODE_PRIVATE
                     )
                     val myEdit = sharedPreferences.edit()
                     myEdit.putBoolean("isLogin", true)
+                    myEdit.putString("uuid", Firebase.auth.currentUser?.uid.toString())
                     myEdit.apply()
                     Toast.makeText(context, "Signed in Successfully ", Toast.LENGTH_SHORT).show()
                     activity?.finish()
-                  openHome()
+                    if (radioButton.text.toString().equals("user", ignoreCase = true)) {
+                        openHome()
+                    }else{
+                        openAdmin()
+                    }
+
                 }
             }
 
 
+    }
+
+    private fun openAdmin() {
+        val intent = Intent(activity,AdminMainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun openHome(){
