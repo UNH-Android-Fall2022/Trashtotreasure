@@ -21,10 +21,16 @@
         android:theme="@style/Theme.FoodWastageApp"
         tools:targetApi="31">
         <activity
+            android:name=".AdminMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TrashToTreasureAdmin"
+            android:exported="false"
+            android:label="@string/title_activity_trash_to_treasure_admin" />
+        <activity
             android:name=".home.TrashToTreasure"
             android:exported="false"
             android:label="@string/title_activity_trash_to_treasure" />
-
         <activity
             android:name=".home.HomeActivity"
             android:exported="false" />
@@ -37,11 +43,11 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name="com.newhaven.trashtotreasure.login.LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name="com.newhaven.trashtotreasure.SplashActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
