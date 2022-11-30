@@ -1,23 +1,20 @@
 package com.newhaven.trashtotreasure.home.ui.myRequest
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.tasks.OnSuccessListener
+import com.google.common.eventbus.EventBus
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentMyRequestListBinding
 import com.newhaven.trashtotreasure.home.Constants
 
 
-class MyRequestFragment : Fragment() {
+class MyRequestFragment : Fragment() ,OnContactUsClick{
 
     private var _binding: FragmentMyRequestListBinding? = null
     var eventList: ArrayList<Event> = ArrayList()
@@ -25,8 +22,6 @@ class MyRequestFragment : Fragment() {
     private lateinit var adapter: RequestListAdapter
 
     private val binding get() = _binding!!
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -71,7 +66,7 @@ class MyRequestFragment : Fragment() {
                 binding.progressCircular.visibility = View.GONE
                 linearLayoutManager = LinearLayoutManager(requireContext())
                 binding.rvEvents.layoutManager = linearLayoutManager
-                adapter = RequestListAdapter(requireContext(),eventList)
+                adapter = RequestListAdapter(requireContext(),eventList,this)
                 binding.rvEvents.adapter = adapter
             }.addOnFailureListener {
                 binding.progressCircular.visibility = View.GONE
@@ -85,6 +80,10 @@ class MyRequestFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_menu,menu)
         menu.findItem(R.id.menu_main_setting).isVisible = false
+    }
+
+    override fun onClick() {
+        findNavController().navigate(R.id.action_navigation_dashboard_to_chatFragment)
     }
 
 

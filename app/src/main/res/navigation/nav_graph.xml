@@ -34,13 +34,4 @@
 
 
 
-    <fragment
-        android:id="@+id/myRequestList"
-        android:name="com.newhaven.trashtotreasure.home.ui.home.RequestListFragment"
-        android:label="@string/register_label"
-        tools:layout="@layout/fragment_request_list"
-        >
-
-    </fragment>
-
 </navigation>
