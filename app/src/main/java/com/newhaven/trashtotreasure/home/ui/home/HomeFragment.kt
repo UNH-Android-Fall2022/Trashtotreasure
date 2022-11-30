@@ -15,12 +15,13 @@ import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -85,14 +86,20 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
 
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    // Handle the back button event
+                }
+            }
+
+
     }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -108,7 +115,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     private fun fetchAddressAndPopulate(mLastLocation: Location?) {
         val geocoder = Geocoder(activity, Locale.getDefault())
-
         val addresses: List<Address> = mLastLocation?.latitude?.let {
             geocoder.getFromLocation(
                 it,
