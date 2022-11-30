@@ -110,6 +110,7 @@
             android:importantForAutofill="no"
             android:inputType="textPassword" />
         <RadioGroup
+            android:id="@+id/rg_admin"
             android:layout_width="match_parent"
             android:weightSum="2"
             android:layout_height="wrap_content"
