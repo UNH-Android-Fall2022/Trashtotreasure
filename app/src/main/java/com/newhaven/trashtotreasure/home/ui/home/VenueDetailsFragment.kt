@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -53,7 +54,25 @@ class VenueDetailsFragment : Fragment() {
 
 
     private fun submitEventInfo(addressDetails: AddressDetails,name: String,contact: String) {
-    showDialog(addressDetails,name,contact)
+        val eventDetails = hashMapOf(
+            "eid" to "EV${idGenerator()}",
+            "uid" to user?.uid,
+            "name" to name,
+            "contact" to contact,
+            "address" to addressDetails.toString(),
+            "isApproved" to false
+        )
+        binding.progressCircular.visibility = View.VISIBLE
+        db?.collection(Constants.EVENTDETAILS)?.document()?.set(eventDetails)?.addOnSuccessListener {
+            binding.progressCircular.visibility = View.GONE
+            showDialog(addressDetails,name,contact)
+            Log.d(Constants.EVENTDETAILS , "Saved Successfully")
+        //    findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
+        }?.addOnFailureListener {
+            binding.progressCircular.visibility = View.GONE
+            Log.d(Constants.EVENTDETAILS , "Failed to insert data")
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -63,34 +82,15 @@ class VenueDetailsFragment : Fragment() {
     }
 
     private fun showDialog(addresses: AddressDetails, name: String, contact: String) {
-
         val dialog = Dialog(activity as TrashToTreasure)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_confirm);
         dialog.findViewById<Button>(R.id.submit).setOnClickListener {
-            val eventDetails = hashMapOf(
-                "eid" to "EV${idGenerator()}",
-                "uid" to user?.uid,
-                "name" to name,
-                "contact" to contact,
-                "address" to addresses.toString(),
-                "isApproved" to false
-            )
-
-            db?.collection(Constants.EVENTDETAILS)?.document()?.set(eventDetails)?.addOnSuccessListener {
-                Log.d(Constants.EVENTDETAILS , "Saved Successfully")
-
-                dialog.dismiss()
-               findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
-            }?.addOnFailureListener {
-                Log.d(Constants.EVENTDETAILS , "Failed to insert data")
-                dialog.dismiss()
-            }
-
+            findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
+            dialog.dismiss()
         }
         dialog.show();
-
     }
 
     private fun idGenerator() =(100000..999999).random()

@@ -1,14 +1,20 @@
 package com.newhaven.trashtotreasure.home
 
+
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.ActivityTrashToTreasureBinding
+import kotlinx.android.synthetic.main.activity_trash_to_treasure.*
+
 
 class TrashToTreasure : AppCompatActivity() {
 
@@ -27,10 +33,12 @@ class TrashToTreasure : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_plan, R.id.navigation_dashboard, R.id.navigation_notifications
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
+
 }
