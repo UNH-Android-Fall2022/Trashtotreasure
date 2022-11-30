@@ -34,11 +34,15 @@
     <string name="confirm_agent">One of our agent will contact you.</string>
     <string name="ok">Ok</string>
     <string name="event_name"><b>Name      :</b></string>
+    <string name="event_id"><b>Req Id      :</b></string>
     <string name="event_address"><b>Address :</b></string>
     <string name="mobile"><b>Contact  :</b></string>
     <string name="event_status"><b>Status     :</b></string>
     <string name="name_display">Enter Display Name</string>
     <string name="office">Office Number</string>
     <string name="email">Email</string>
-    <string name="profile">Uodate Profile</string>
+    <string name="profile">Update Profile</string>
+    <string name="landLine">Landline Number</string>
+    <string name="signout">Logout</string>
+    <string name="title_activity_trash_to_treasure_admin">TrashToTreasureAdmin</string>
 </resources>
