@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -62,10 +63,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun getData(): Profile? {
-
+        binding.progressCircular.visibility = View.VISIBLE
         FirebaseFirestore.getInstance().collection(Constants.PROFILEDETAILS).get()
             .addOnSuccessListener {
-                for (documents in it.documents) {
+                binding.progressCircular.visibility = View.GONE
+                for (documents in it.documents.reversed()) {
                     if (documents.data?.get("uid")
                             .toString() == FirebaseAuth.getInstance().currentUser?.uid.toString()
                     ) {
@@ -82,6 +84,9 @@ class ProfileFragment : Fragment() {
                     }
                     break
                 }
+            }
+            .addOnFailureListener {
+                binding.progressCircular.visibility = View.GONE
             }
         return profile
     }
@@ -152,6 +157,7 @@ class ProfileFragment : Fragment() {
         val etMobile = dialog.findViewById<EditText>(R.id.et_mobile)
         val etHome = dialog.findViewById<EditText>(R.id.etHome)
         val etEmail = dialog.findViewById<EditText>(R.id.etEmail)
+        val progressCircular = dialog.findViewById<ProgressBar>(R.id.progress_circular)
         dialog.findViewById<Button>(R.id.submit).setOnClickListener {
             val profileDetails = hashMapOf(
                 "uid" to uid,
@@ -161,18 +167,22 @@ class ProfileFragment : Fragment() {
                 "address" to etHome.text.toString(),
                 "email" to email
             )
-
+            progressCircular.visibility = View.VISIBLE
 
             db?.collection(Constants.PROFILEDETAILS)?.document()?.set(profileDetails)?.addOnSuccessListener {
                 Log.d(Constants.EVENTDETAILS , "Saved Successfully")
+                progressCircular.visibility = View.GONE
                 dialog.dismiss()
 //                findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
             }?.addOnFailureListener {
+                progressCircular.visibility = View.GONE
                 Log.d(Constants.EVENTDETAILS , "Failed to insert data")
                 dialog.dismiss()
             }
         }
         dialog.show();
+
+        dialog.setCancelable(true)
     }
 
 
