@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.newhaven.trashtotreasure.AdminActivity
 import com.newhaven.trashtotreasure.AdminMainActivity
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.home.TrashToTreasure
@@ -95,32 +96,35 @@ class LoginFragment : Fragment() {
                     } catch (e: Exception) {
                         // Log.d(TAG, "onComplete: " + e.message)
                     }
-                }else{
-                    Log.d("radio",radioButton.text.toString())
+                } else {
+
+                    val isAdmin = radioButton.text.toString().equals("admin", ignoreCase = true)
+                    Log.d("radio", radioButton.text.toString())
                     progressBar.visibility = View.GONE
-                    val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("MySharedPref",
-                        Context.MODE_PRIVATE
-                    )
+                    val sharedPreferences: SharedPreferences =
+                        requireActivity().getSharedPreferences(
+                            "MySharedPref",
+                            Context.MODE_PRIVATE
+                        )
                     val myEdit = sharedPreferences.edit()
                     myEdit.putBoolean("isLogin", true)
+                    myEdit.putBoolean("isAdmin", isAdmin)
                     myEdit.putString("uuid", Firebase.auth.currentUser?.uid.toString())
                     myEdit.apply()
                     Toast.makeText(context, "Signed in Successfully ", Toast.LENGTH_SHORT).show()
                     activity?.finish()
-                    if (radioButton.text.toString().equals("user", ignoreCase = true)) {
+                    if (!isAdmin) {
                         openHome()
-                    }else{
+                    } else {
                         openAdmin()
                     }
-
                 }
             }
-
 
     }
 
     private fun openAdmin() {
-        val intent = Intent(activity,AdminMainActivity::class.java)
+        val intent = Intent(activity,AdminActivity::class.java)
         startActivity(intent)
     }
 
