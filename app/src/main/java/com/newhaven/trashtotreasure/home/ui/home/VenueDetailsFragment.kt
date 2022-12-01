@@ -63,7 +63,7 @@ class VenueDetailsFragment : Fragment() {
             "isApproved" to false
         )
         binding.progressCircular.visibility = View.VISIBLE
-        db?.collection(Constants.EVENTDETAILS)?.document()?.set(eventDetails)?.addOnSuccessListener {
+        db?.collection(Constants.EVENTDETAILS)?.document(eventDetails["eid"].toString())?.set(eventDetails)?.addOnSuccessListener {
             binding.progressCircular.visibility = View.GONE
             showDialog(addressDetails,name,contact)
             Log.d(Constants.EVENTDETAILS , "Saved Successfully")

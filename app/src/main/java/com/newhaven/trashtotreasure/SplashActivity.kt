@@ -19,8 +19,11 @@ class SplashActivity : AppCompatActivity() {
             delay(3000)
             val intent: Intent?
             val sh = getSharedPreferences("MySharedPref", MODE_PRIVATE)
-            intent = if(sh.getBoolean("isLogin",false))
+            val isAdmin = sh.getBoolean("isAdmin",false)
+            intent = if(sh.getBoolean("isLogin",false) && !isAdmin )
                 Intent(this@SplashActivity, TrashToTreasure::class.java)
+            else if (sh.getBoolean("isLogin",false) && isAdmin)
+                Intent(this@SplashActivity, AdminActivity::class.java)
             else
                 Intent(this@SplashActivity, LoginActivity::class.java)
             startActivity(intent)

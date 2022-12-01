@@ -42,7 +42,13 @@
     <string name="office">Office Number</string>
     <string name="email">Email</string>
     <string name="profile">Update Profile</string>
+    <string name="profilelabel">Profile</string>
     <string name="landLine">Landline Number</string>
     <string name="signout">Logout</string>
     <string name="title_activity_trash_to_treasure_admin">TrashToTreasureAdmin</string>
+    <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_request">Requests</string>
+    <string name="rider">Assign Rider</string>
+    <string name="assign_driver">Assign Driver</string>
+    <string name="drivername">DriverName</string>
 </resources>
