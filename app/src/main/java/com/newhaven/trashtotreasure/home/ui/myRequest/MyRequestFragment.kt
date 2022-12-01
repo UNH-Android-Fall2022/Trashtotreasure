@@ -27,8 +27,6 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
         setHasOptionsMenu(true)
     }
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,7 +37,6 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
         getRequestList()
         return root
     }
-
 
     private fun getRequestList() {
         binding.progressCircular.visibility = View.VISIBLE
@@ -56,13 +53,11 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
                                     documents.data?.get("contact").toString(),
                                     documents.data?.get("address").toString(),
                                     documents.data?.get("isApproved") as Boolean
-
                                 )
                             )
                         }
                     }
                 }
-
                 binding.progressCircular.visibility = View.GONE
                 linearLayoutManager = LinearLayoutManager(requireContext())
                 binding.rvEvents.layoutManager = linearLayoutManager
@@ -72,8 +67,6 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
                 binding.progressCircular.visibility = View.GONE
                 Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
             }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -84,6 +77,13 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
 
     override fun onClick() {
         findNavController().navigate(R.id.action_navigation_dashboard_to_chatFragment)
+    }
+
+    override fun onApproveClick(eid: String, event: HashMap<String, Any>) {
+
+    }
+
+    override fun onDriverClick(eid: String) {
     }
 
 
