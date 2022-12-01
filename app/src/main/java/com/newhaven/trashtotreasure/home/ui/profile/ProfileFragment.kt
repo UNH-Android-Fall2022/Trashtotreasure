@@ -1,5 +1,6 @@
 package com.newhaven.trashtotreasure.home.ui.profile
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -43,10 +44,6 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +55,13 @@ class ProfileFragment : Fragment() {
         val root: View = binding.root
         db  = FirebaseFirestore.getInstance()
         getData()
-        profile?.let { setData(it) }
+        profile.let {
+            if (it != null) {
+                setData(it)
+            }else{
+                setData()
+            }
+        }
         return root
     }
 
@@ -119,6 +122,22 @@ class ProfileFragment : Fragment() {
     }
 
 
+   private fun setData(){
+       val user = Firebase.auth.currentUser
+       user?.let {
+           // Name, email address, and profile photo Url
+           uid = user.uid
+           name = user.displayName.toString()
+           email = user.email.toString()
+           binding.tvName.text = name
+           binding.tvEmail.text = email
+           binding.tvAddress.text = "-"
+           binding.tvMobile.text = "-"
+           binding.tvHome.text = "-"
+       }
+   }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -132,22 +151,18 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         val id = item.itemId
-
         if (id == R.id.menu_main_setting) {
-            showDialog()
+            activity?.let { showDialog(it) }
         }
         return super.onOptionsItemSelected(item)
-
-
     }
 
 
 
-    private fun showDialog() {
+    private fun showDialog(activity: Activity) {
 
-        val dialog = Dialog(activity as TrashToTreasure)
+        val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_profile);
@@ -169,7 +184,7 @@ class ProfileFragment : Fragment() {
             )
             progressCircular.visibility = View.VISIBLE
 
-            db?.collection(Constants.PROFILEDETAILS)?.document()?.set(profileDetails)?.addOnSuccessListener {
+            db?.collection(Constants.PROFILEDETAILS)?.document(uid)?.set(profileDetails)?.addOnSuccessListener {
                 Log.d(Constants.EVENTDETAILS , "Saved Successfully")
                 progressCircular.visibility = View.GONE
                 dialog.dismiss()
