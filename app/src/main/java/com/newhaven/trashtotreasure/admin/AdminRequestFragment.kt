@@ -12,6 +12,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,7 +65,7 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
 
     private fun getRequestList() {
         binding.progressCircular.visibility = View.VISIBLE
-        var eventList: ArrayList<Event> = ArrayList()
+        val eventList: ArrayList<Event> = ArrayList()
         FirebaseFirestore.getInstance().collection(Constants.EVENTDETAILS).get()
             .addOnSuccessListener {
                 for (documents in it.documents) {
@@ -112,13 +114,13 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
             }
     }
 
-    override fun onClick() {
-
+    override fun onClick(eid: String) {
+        val bundle = bundleOf( "eid" to eid)
+        findNavController().navigate(R.id.action_navigation_request_to_chatFragment2,bundle)
     }
 
     override fun onApproveClick(eid:String, event: HashMap<String, Any>) {
         binding.progressCircular.visibility = View.VISIBLE
-
         FirebaseFirestore.getInstance().collection(Constants.EVENTDETAILS).document(eid).update(
             event as Map<String, Any>
         ).addOnSuccessListener {
@@ -142,7 +144,6 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_driver);
-
         val etName = dialog.findViewById<EditText>(R.id.etDriver)
         val etPhone = dialog.findViewById<EditText>(R.id.et_mobile)
         val progressCircular = dialog.findViewById<ProgressBar>(R.id.progress_circular)

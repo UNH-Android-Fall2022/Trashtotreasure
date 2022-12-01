@@ -56,7 +56,7 @@ class RequestListAdapter(
         }
 
         holder.tvContact.setOnClickListener {
-            onContactUsClick.onClick()
+            onContactUsClick.onClick(ItemsViewModel.eId)
         }
     }
 

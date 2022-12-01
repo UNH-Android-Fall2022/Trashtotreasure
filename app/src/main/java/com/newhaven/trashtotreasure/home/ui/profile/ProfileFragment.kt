@@ -70,7 +70,7 @@ class ProfileFragment : Fragment() {
         FirebaseFirestore.getInstance().collection(Constants.PROFILEDETAILS).get()
             .addOnSuccessListener {
                 binding.progressCircular.visibility = View.GONE
-                for (documents in it.documents.reversed()) {
+                for (documents in it.documents) {
                     if (documents.data?.get("uid")
                             .toString() == FirebaseAuth.getInstance().currentUser?.uid.toString()
                     ) {
@@ -80,12 +80,11 @@ class ProfileFragment : Fragment() {
                                 documents.data?.get("email").toString(),
                                documents.data?.get("mobile").toString(),
                                 documents.data?.get("landline").toString(),
-                               documents.data?.get("address").toString(),
+                               documents.data?.get("address").toString()
                             )
                             setData(profile!!)
                         }
                     }
-                    break
                 }
             }
             .addOnFailureListener {

@@ -9,12 +9,21 @@
         android:id="@+id/navigation_request"
         android:name="com.newhaven.trashtotreasure.admin.AdminRequestFragment"
         android:label="@string/title_request"
-        tools:layout="@layout/fragment_admin_request" />
+        tools:layout="@layout/fragment_admin_request" >
+        <action
+            android:id="@+id/action_navigation_request_to_chatFragment2"
+            app:destination="@id/chatFragment2" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_admin_profile"
         android:name="com.newhaven.trashtotreasure.home.ui.profile.ProfileFragment"
         android:label="@string/profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/chatFragment2"
+        android:name="com.newhaven.trashtotreasure.home.ui.messages.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat"/>
 
 </navigation>

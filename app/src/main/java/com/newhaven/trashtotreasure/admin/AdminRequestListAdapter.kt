@@ -70,6 +70,10 @@ class AdminRequestListAdapter(
             onContactUsClick.onApproveClick(ItemsViewModel.eId,eventDetails as HashMap<String, Any> /* = java.util.HashMap<kotlin.String, kotlin.Any> */)
         }
 
+        holder.tvContact.setOnClickListener {
+            onContactUsClick.onClick(ItemsViewModel.eId)
+        }
+
 
         holder.eDriver.setOnClickListener {
             if(ItemsViewModel.isApproved){

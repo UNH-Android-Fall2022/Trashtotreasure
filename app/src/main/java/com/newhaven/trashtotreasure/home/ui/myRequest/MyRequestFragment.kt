@@ -3,6 +3,7 @@ package com.newhaven.trashtotreasure.home.ui.myRequest
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,8 +76,9 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
         menu.findItem(R.id.menu_main_setting).isVisible = false
     }
 
-    override fun onClick() {
-        findNavController().navigate(R.id.action_navigation_dashboard_to_chatFragment)
+    override fun onClick(eid: String) {
+        val bundle = bundleOf( "eid" to eid)
+        findNavController().navigate(R.id.action_navigation_dashboard_to_chatFragment,bundle)
     }
 
     override fun onApproveClick(eid: String, event: HashMap<String, Any>) {

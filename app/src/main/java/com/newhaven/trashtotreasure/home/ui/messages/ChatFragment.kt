@@ -30,6 +30,7 @@ class ChatFragment : Fragment() {
     var username: String? = null
     var currentuser: String? = null
     var uuid: String? = "user"
+    var myuuid : String? = null
     var isInserted: Boolean = false
     var FirebaseToken: String? = null
     lateinit var mContext: Activity
@@ -46,7 +47,7 @@ class ChatFragment : Fragment() {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-     //   uuid = arguments?.getString("uid")
+      uuid = arguments?.getString("eid")
       //  username = arguments?.getString("username")
       //  currentuser = arguments?.getString("currentuser")
 
@@ -112,7 +113,7 @@ class ChatFragment : Fragment() {
     private fun initList() {
 
         val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
-        uuid =   sh?.getString("uuid", "")
+        myuuid =   sh?.getString("uuid", "")
 
         binding.listChat.layoutManager = LinearLayoutManager(requireContext())
         val adapter = uuid
@@ -122,7 +123,7 @@ class ChatFragment : Fragment() {
 
 
 
-        collectionType = uuid?.let { setOneToOneChat(it, "admin") }
+        collectionType = uuid?.let { myuuid?.let { it1 -> setOneToOneChat(it, it1) } }
         collectionType?.let { listenForChatMessages(it) }
     }
     private fun listenForChatMessages(collectionType: String) {
