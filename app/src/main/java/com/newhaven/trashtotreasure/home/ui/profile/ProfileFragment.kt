@@ -49,8 +49,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
         db  = FirebaseFirestore.getInstance()
@@ -134,6 +132,18 @@ class ProfileFragment : Fragment() {
            binding.tvMobile.text = "-"
            binding.tvHome.text = "-"
        }
+       binding.btnSignout.setOnClickListener {
+           val sharedPreferences: SharedPreferences = requireActivity().getSharedPreferences("MySharedPref",
+               Context.MODE_PRIVATE
+           )
+           val myEdit = sharedPreferences.edit()
+           myEdit.putBoolean("isLogin", false)
+           myEdit.putString("uuid", "")
+           myEdit.apply()
+           activity?.finish()
+           val intent = Intent(activity,LoginActivity::class.java)
+           startActivity(intent)
+       }
    }
 
 
@@ -186,6 +196,7 @@ class ProfileFragment : Fragment() {
             db?.collection(Constants.PROFILEDETAILS)?.document(uid)?.set(profileDetails)?.addOnSuccessListener {
                 Log.d(Constants.EVENTDETAILS , "Saved Successfully")
                 progressCircular.visibility = View.GONE
+                setData(getData()!!)
                 dialog.dismiss()
 //                findNavController().navigate(R.id.action_venueDetailsFragment_to_navigation_dashboard)
             }?.addOnFailureListener {

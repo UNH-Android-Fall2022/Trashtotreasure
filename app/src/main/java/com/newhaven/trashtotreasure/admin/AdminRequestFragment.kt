@@ -125,7 +125,9 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
             event as Map<String, Any>
         ).addOnSuccessListener {
             binding.progressCircular.visibility = View.GONE
-            Toast.makeText(context, "Request is approved please refresh page.", Toast.LENGTH_SHORT).show()
+            getRequestList()
+            adapter.notifyDataSetChanged()
+           // Toast.makeText(context, "Request is approved please refresh page.", Toast.LENGTH_SHORT).show()
             Log.d("update","updated")
         }.addOnFailureListener {
             binding.progressCircular.visibility = View.GONE
