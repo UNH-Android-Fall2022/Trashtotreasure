@@ -41,4 +41,9 @@ class TrashToTreasure : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_activity_trash_to_treasure)
+        return navController.navigateUp() || super.onSupportNavigateUp()
+
+    }
 }

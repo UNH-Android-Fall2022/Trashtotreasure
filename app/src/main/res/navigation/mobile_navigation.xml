@@ -13,7 +13,8 @@
         <action
             android:id="@+id/action_navigation_home_to_venueDetailsFragment"
             app:destination="@id/venueDetailsFragment"
-            app:popUpTo="@id/navigation_home"/>
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -23,7 +24,9 @@
         tools:layout="@layout/fragment_my_request_list" >
         <action
             android:id="@+id/action_navigation_dashboard_to_chatFragment"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/chatFragment"
+            app:popUpTo="@id/navigation_dashboard"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -31,6 +34,7 @@
         android:name="com.newhaven.trashtotreasure.home.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_profile" />
+
     <fragment
         android:id="@+id/venueDetailsFragment"
         android:name="com.newhaven.trashtotreasure.home.ui.home.VenueDetailsFragment"
@@ -40,7 +44,8 @@
         <action
             android:id="@+id/action_venueDetailsFragment_to_navigation_dashboard"
             app:destination="@id/navigation_dashboard"
-            app:popUpTo="@id/venueDetailsFragment"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true"
             />
     </fragment>
 
@@ -53,6 +58,8 @@
         <action
             android:id="@+id/action_planEventFragment_to_navigation_home"
             app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_plan"
+            app:popUpToInclusive="true"
            />
 
     </fragment>
