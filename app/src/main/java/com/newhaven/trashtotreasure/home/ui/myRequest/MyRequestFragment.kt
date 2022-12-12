@@ -76,8 +76,8 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
         menu.findItem(R.id.menu_main_setting).isVisible = false
     }
 
-    override fun onClick(eid: String) {
-        val bundle = bundleOf( "eid" to eid)
+    override fun onClick(eid: String, uid: String) {
+        val bundle = bundleOf( "eid" to eid,"uid" to FirebaseAuth.getInstance().currentUser?.uid)
         findNavController().navigate(R.id.action_navigation_dashboard_to_chatFragment,bundle)
     }
 

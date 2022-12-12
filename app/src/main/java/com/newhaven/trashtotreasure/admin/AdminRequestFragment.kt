@@ -114,8 +114,8 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
             }
     }
 
-    override fun onClick(eid: String) {
-        val bundle = bundleOf( "eid" to eid)
+    override fun onClick(eid: String,uid: String) {
+        val bundle = bundleOf( "eid" to eid,"uid" to uid)
         findNavController().navigate(R.id.action_navigation_request_to_chatFragment2,bundle)
     }
 

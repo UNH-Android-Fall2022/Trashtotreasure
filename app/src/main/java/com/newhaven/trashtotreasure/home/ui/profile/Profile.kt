@@ -4,4 +4,5 @@ data class Profile(  val name: String,
                      val email: String,
                      val contact: String,
                      val landline: String,
-                     val address: String)
+                     val address: String,
+val  profilePath: String)

@@ -47,9 +47,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     var mLastLocation: Location? = null
     internal var mCurrLocationMarker: Marker? = null
     internal var mFusedLocationClient: FusedLocationProviderClient? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
 
@@ -92,6 +89,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     // Handle the back button event
                 }
             }
+        mLocationRequest = LocationRequest()
+        mLocationRequest.interval = 120000 // two minute interval
+        mLocationRequest.fastestInterval = 120000
+        mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
 
 
     }
@@ -100,11 +101,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
         mFusedLocationClient =
             LocationServices.getFusedLocationProviderClient(activity as TrashToTreasure)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val root: View = binding.root
         mapFrag = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFrag?.getMapAsync(this)
         binding.btnFetchAddress.setOnClickListener {

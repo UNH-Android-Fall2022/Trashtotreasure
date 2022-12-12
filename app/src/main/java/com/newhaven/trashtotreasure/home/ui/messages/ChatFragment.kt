@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.firebase.Timestamp
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -15,7 +15,6 @@ import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentChatBinding
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ChatFragment : Fragment() {
 
@@ -30,11 +29,11 @@ class ChatFragment : Fragment() {
     var username: String? = null
     var currentuser: String? = null
     var uuid: String? = "user"
-    var myuuid : String? = null
+    var myuuid: String? = null
+    var uuidd: String? = null
     var isInserted: Boolean = false
-    var FirebaseToken: String? = null
     lateinit var mContext: Activity
-    private var startdate : String? = null
+    private var startdate: String? = null
 
     private var _binding: FragmentChatBinding? = null
 
@@ -46,13 +45,9 @@ class ChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        uuid = arguments?.getString("eid")
+        uuidd = arguments?.getString("uid")
 
-      uuid = arguments?.getString("eid")
-      //  username = arguments?.getString("username")
-      //  currentuser = arguments?.getString("currentuser")
-
-
-     //   val bundle = bundleOf("uid" to uuid)
     }
 
     override fun onCreateView(
@@ -69,7 +64,7 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -84,7 +79,7 @@ class ChatFragment : Fragment() {
         checkUser()
         if (uuid != null) {
             if (uuid != "") {
-             //   getRegisteredToken(uuid!!)
+                //   getRegisteredToken(uuid!!)
             }
         }
 
@@ -94,14 +89,9 @@ class ChatFragment : Fragment() {
 
     private fun setOneToOneChat(uid1: String, uid2: String): String? {
 //Check if user1’s id is less than user2's
-        return if (uid1 < uid2) {
-            uid1 + uid2
-        } else {
-            uid2 + uid1
-        }
+
+        return uid2 + uid1
     }
-
-
 
 
     private fun setViewListeners() {
@@ -113,7 +103,7 @@ class ChatFragment : Fragment() {
     private fun initList() {
 
         val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
-        myuuid =   sh?.getString("uuid", "")
+        myuuid = sh?.getString("uuid", "")
 
         binding.listChat.layoutManager = LinearLayoutManager(requireContext())
         val adapter = uuid
@@ -123,9 +113,10 @@ class ChatFragment : Fragment() {
 
 
 
-        collectionType = uuid?.let { myuuid?.let { it1 -> setOneToOneChat(it, it1) } }
+        collectionType = uuid?.let { uuidd?.let { it1 -> setOneToOneChat(it, it1) } }
         collectionType?.let { listenForChatMessages(it) }
     }
+
     private fun listenForChatMessages(collectionType: String) {
         chatRegistration =
             firestore.collection("chatChannel").document(collectionType).collection("messages")
@@ -133,10 +124,10 @@ class ChatFragment : Fragment() {
                     "timestamp"
                 )
                 .addSnapshotListener { messageSnapshot, exception ->
-                 //   NetworkUtils.isInserted = false
+                    //   NetworkUtils.isInserted = false
                     //is chat's empty
                     if (messageSnapshot == null || messageSnapshot.isEmpty) {
-                     //   showPopUPGroupMessage()
+                        //   showPopUPGroupMessage()
                         return@addSnapshotListener
                     }
                     chatMessages.clear()
@@ -197,7 +188,7 @@ class ChatFragment : Fragment() {
                         Pair("timestamp", Timestamp.now()),
                         Pair("username", user?.displayName),
                         Pair("time", currentTime),
-                        Pair("sentDate",startdate)
+                        Pair("sentDate", startdate)
                     )
                 ).addOnSuccessListener {
 
@@ -208,18 +199,6 @@ class ChatFragment : Fragment() {
                             if (documentSnapshot != null) {
                                 if (documentSnapshot["reciever"] as? String != uuid
                                 ) {
-                                  //  NetworkUtils.isInserted = true
-
-//                                    if (FirebaseToken != null) {
-//
-//                                        viewModel.sendNotificationToPatner(
-//                                            FirebaseToken!!,
-//                                            "Chat Notification",
-//                                            "You have received a message from"+" " + arguments?.getString("username")!!,
-//                                            arguments?.getString("username")!!,
-//                                            message.trim()
-//                                        )
-//                                    }
 
                                 }
                             }

@@ -71,7 +71,7 @@ class AdminRequestListAdapter(
         }
 
         holder.tvContact.setOnClickListener {
-            onContactUsClick.onClick(ItemsViewModel.eId)
+            onContactUsClick.onClick(ItemsViewModel.eId,ItemsViewModel.uId)
         }
 
 
