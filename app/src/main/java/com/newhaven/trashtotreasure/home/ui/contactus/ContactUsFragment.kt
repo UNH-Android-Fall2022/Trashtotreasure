@@ -1,9 +1,9 @@
-package com.newhaven.trashtotreasure.home.ui.messages
+package com.newhaven.trashtotreasure.home.ui.contactus
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,37 +16,27 @@ import com.newhaven.trashtotreasure.databinding.FragmentChatBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatFragment : Fragment() {
+class ContactUsFragment : Fragment() {
 
-    val auth = FirebaseAuth.getInstance()
+    private val auth = FirebaseAuth.getInstance()
     var user = auth.currentUser
-    val count: Int? = null
-    val firestore = FirebaseFirestore.getInstance()
-    var collectionType: String? = null
-    val chatMessages = ArrayList<ChatMessage>()
-    var chatRegistration: ListenerRegistration? = null
-    var chatRegistration1: ListenerRegistration? = null
-    var username: String? = null
-    var currentuser: String? = null
-    var uuid: String? = "user"
+    private val fireStoreInstance = FirebaseFirestore.getInstance()
+    private var collectionType: String? = null
+    private val chatMessages = ArrayList<ContactUs>()
+    private var chatRegistration: ListenerRegistration? = null
+    var eventId: String? = "user"
     var myuuid: String? = null
-    var uuidd: String? = null
-    var isInserted: Boolean = false
-    lateinit var mContext: Activity
+    private var recieveruuid: String? = null
     private var startdate: String? = null
-
     private var _binding: FragmentChatBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        uuid = arguments?.getString("eid")
-        uuidd = arguments?.getString("uid")
+        eventId = arguments?.getString("eid")
+        recieveruuid = arguments?.getString("uid")
 
     }
 
@@ -55,17 +45,10 @@ class ChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentChatBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        return root
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -75,24 +58,13 @@ class ChatFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        checkUser()
-        if (uuid != null) {
-            if (uuid != "") {
-                //   getRegisteredToken(uuid!!)
-            }
-        }
-
         initList()
         setViewListeners()
     }
 
-    private fun setOneToOneChat(uid1: String, uid2: String): String? {
-//Check if user1’s id is less than user2's
-
+    private fun setOneToOneChat(uid1: String, uid2: String): String {
         return uid2 + uid1
     }
-
 
     private fun setViewListeners() {
         binding.buttonSend.setOnClickListener {
@@ -101,111 +73,85 @@ class ChatFragment : Fragment() {
     }
 
     private fun initList() {
-
         val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
         myuuid = sh?.getString("uuid", "")
-
         binding.listChat.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = uuid
-            ?.let { ChatAdapter(chatMessages, it, "admin", false, null) }
+        val isAdmin = sh?.getBoolean("isAdmin",false)
+        val adapter = recieveruuid
+            ?.let { ContactUsAdapter(chatMessages, it, "admin", false, null,requireContext()) }
         binding.listChat.adapter = adapter
         binding.listChat.scrollToPosition(chatMessages.size - 1)
-
-
-
-        collectionType = uuid?.let { uuidd?.let { it1 -> setOneToOneChat(it, it1) } }
+        collectionType = eventId?.let { recieveruuid?.let { it1 -> setOneToOneChat(it, it1) } }
         collectionType?.let { listenForChatMessages(it) }
     }
 
     private fun listenForChatMessages(collectionType: String) {
         chatRegistration =
-            firestore.collection("chatChannel").document(collectionType).collection("messages")
+            fireStoreInstance.collection("contactus").document(collectionType).collection("messages")
                 .orderBy(
                     "timestamp"
                 )
                 .addSnapshotListener { messageSnapshot, exception ->
-                    //   NetworkUtils.isInserted = false
-                    //is chat's empty
                     if (messageSnapshot == null || messageSnapshot.isEmpty) {
-                        //   showPopUPGroupMessage()
                         return@addSnapshotListener
                     }
                     chatMessages.clear()
-
-
                     for (messageDocument in messageSnapshot.documents) {
                         chatMessages.add(
-                            ChatMessage(
+                            ContactUs(
                                 messageDocument["text"] as? String,
                                 messageDocument["user"] as? String,
                                 messageDocument["reciever"] as? String,
                                 messageDocument["timestamp"] as? Date,
                                 messageDocument["username"] as? String,
                                 messageDocument["time"] as? String,
-                                messageDocument["sentDate"] as? String
+                                messageDocument["sentDate"] as? String,
+                                messageDocument["isAdmin"] as? Boolean
                             )
                         )
                     }
                     binding.listChat.adapter?.notifyDataSetChanged()
                     binding.listChat.scrollToPosition(chatMessages.size - 1)
-                    Log.d("messages", chatMessages.toString())
-
                 }
     }
-
-    private fun checkUser() {
-        chatRegistration1 = firestore.collection("user")
-            .addSnapshotListener { messageSnapshot, exception ->
-
-                if (messageSnapshot == null || messageSnapshot.isEmpty)
-                    return@addSnapshotListener
-
-                for (messageDocument in messageSnapshot.documents) {
-                    if ((messageDocument["uid"] as? String).equals(user?.uid)) {
-                        username = messageDocument["name"] as? String
-                        Log.d("username", username + "")
-                    }
-                }
-            }
-    }
-
     private fun sendChatMessage(collectionType: String) {
         val message = binding.edittextChat.text.toString()
         binding.edittextChat.setText("")
-//        binding.edittextChat.hideKeyboard()
+        val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
+        val isAdmin = sh?.getBoolean("isAdmin",false)
+     binding.edittextChat.hideKeyboard()
         val currentTime: String =
             SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date())
-        Log.d("time", currentTime)
-
-
         if (message.isNotEmpty() || message != "") {
-            firestore.collection("chatChannel").document(collectionType).collection("messages")
+            fireStoreInstance.collection("contactus").document(collectionType).collection("messages")
                 .add(
                     mapOf(
                         Pair("text", message.trim()),
                         Pair("user", user?.uid),
-                        Pair("reciever", uuid),
+                        Pair("reciever", eventId),
                         Pair("timestamp", Timestamp.now()),
                         Pair("username", user?.displayName),
                         Pair("time", currentTime),
-                        Pair("sentDate", startdate)
+                        Pair("sentDate", startdate),
+                        Pair("isAdmin",isAdmin)
                     )
                 ).addOnSuccessListener {
 
-                    firestore.collection("chatChannel").document(collectionType)
+                    fireStoreInstance.collection("contactus").document(collectionType)
                         .collection("messages").document(
                             it.id
                         ).get().addOnSuccessListener { documentSnapshot ->
-                            if (documentSnapshot != null) {
-                                if (documentSnapshot["reciever"] as? String != uuid
-                                ) {
-
-                                }
-                            }
+                            Log.d("Message","Inserted")
                         }
                     it.id
 
                 }
         }
+    }
+
+    private fun View.hideKeyboard() {
+        val imm =
+            context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }

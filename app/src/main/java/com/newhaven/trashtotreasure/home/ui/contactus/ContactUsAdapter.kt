@@ -1,5 +1,6 @@
-package com.newhaven.trashtotreasure.home.ui.messages
+package com.newhaven.trashtotreasure.home.ui.contactus
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +15,13 @@ import kotlinx.android.synthetic.main.list_item_chat.view.textview_chat_sent
 import kotlinx.android.synthetic.main.list_item_chat.view.time
 import kotlinx.android.synthetic.main.list_item_chat1.view.*
 
-class ChatAdapter(
-    private val chatMessages: List<ChatMessage>,
+class ContactUsAdapter(
+    private val chatMessages: List<ContactUs>,
     private val uid: String,
     private val name: String,
     private val isGroup: Boolean,
-    private val memberdata: ArrayList<MemberData>?
+    private val memberdata: ArrayList<MemberData>?,
+    private val context: Context?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 //    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -73,14 +75,11 @@ class ChatAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val chatMessage = chatMessages[position]
-        if (chatMessage.user == uid)
-            return 1
-        /*   else if(chatMessage.username!=null){
-               for()//username 3 coach sea match
 
-           }*/
+        return if (chatMessage.isAdmin == true)
+            1
         else
-            return 0
+            0
 
     }
 
@@ -106,14 +105,13 @@ class ChatAdapter(
                 holder.itemView.textview_chat_sent.text = chatMessage.text
                 holder.itemView.time.text = chatMessage.time
                 holder.itemView.sendername.text=chatMessage.username
-              //  holder.itemView.senderdate.text= chatMessage.startDate.toString()
             }
             1 -> {
                 holder.itemView.textview_chat_receiver.text = chatMessage.username
                 holder.itemView.textview_chat_received.text = chatMessage.text
                 holder.itemView.time.text = chatMessage.time
-                holder.itemView.recievername.text = "You"
-              //  holder.itemView.recieverdate.text = chatMessage.startDate.toString()
+                holder.itemView.recievername.text = "Admin"
+
             }
         }
     }
