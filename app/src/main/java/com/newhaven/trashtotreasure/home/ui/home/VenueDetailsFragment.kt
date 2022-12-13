@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -46,7 +47,15 @@ class VenueDetailsFragment : Fragment() {
         val root: View = binding.root
         binding.tvAddress.text = "Address : $flat,$land,$city,\n$country,$pin"
         binding.venueSubmit.setOnClickListener {
-            submitEventInfo(addressDetails = AddressDetails(flat,land,city,country,pin),binding.etName.text.toString(),binding.etContact.text.toString())
+            if(binding.etName.text.isNotEmpty() && binding.etContact.text.isNotEmpty() && binding.etBehalf.text.isNotEmpty()) {
+                submitEventInfo(
+                    addressDetails = AddressDetails(flat, land, city, country, pin),
+                    binding.etName.text.toString(),
+                    binding.etContact.text.toString()
+                )
+            }else{
+                Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
+            }
         }
 
      return root
