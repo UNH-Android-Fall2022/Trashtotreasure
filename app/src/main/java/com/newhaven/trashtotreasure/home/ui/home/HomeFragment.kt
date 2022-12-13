@@ -16,7 +16,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -48,9 +47,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     internal var mCurrLocationMarker: Marker? = null
     internal var mFusedLocationClient: FusedLocationProviderClient? = null
     private val binding get() = _binding!!
+    private var geocoder: Geocoder? = null
 
 
-    internal var mLocationCallback: LocationCallback = object : LocationCallback() {
+    private var mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val locationList = locationResult.locations
             if (locationList.isNotEmpty()) {
@@ -107,22 +107,28 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val root: View = binding.root
         mapFrag = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFrag?.getMapAsync(this)
+        geocoder = Geocoder(activity, Locale.getDefault())
         binding.btnFetchAddress.setOnClickListener {
-            fetchAddressAndPopulate(mLastLocation)
+           // try {
+                fetchAddressAndPopulate(mLastLocation)
+          //  }
+            //catch (e: Exception){
+          //      e.stackTrace
+          //  }
+
         }
         return root
     }
 
     private fun fetchAddressAndPopulate(mLastLocation: Location?) {
-        val geocoder = Geocoder(activity, Locale.getDefault())
-        val addresses: List<Address> = mLastLocation?.latitude?.let {
-            geocoder.getFromLocation(
-                it,
-                mLastLocation.longitude,
-                1
-            )
-        } as List<Address> // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        showDialog(addresses)
+
+        val addresses = mLastLocation?.latitude?.let {
+            Geocoder(activity, Locale.getDefault()).getFromLocation(
+                it, mLastLocation.longitude, 1)
+        }
+        if (addresses != null) {
+            showDialog(addresses)
+        }
     }
 
     private fun showDialog(addresses: List<Address>) {
@@ -177,8 +183,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         mGoogleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
 
         mLocationRequest = LocationRequest()
-        mLocationRequest.interval = 120000 // two minute interval
-        mLocationRequest.fastestInterval = 120000
+        mLocationRequest.interval = 30000 // two minute interval
+        mLocationRequest.fastestInterval = 30000
         mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -275,7 +281,24 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                             mLocationCallback,
                             Looper.myLooper()
                         )
-                        mGoogleMap.setMyLocationEnabled(true)
+                        val latLng = mLastLocation?.latitude?.let { mLastLocation?.longitude?.let { it1 ->
+                            LatLng(it,
+                                it1
+                            )
+                        } }
+                        val markerOptions = MarkerOptions()
+                        if (latLng != null) {
+                            markerOptions.position(latLng)
+                        }
+                        markerOptions.title("Current Position")
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        mCurrLocationMarker = mGoogleMap.addMarker(markerOptions)
+
+                        //move map camera
+                        latLng?.let { CameraUpdateFactory.newLatLngZoom(it, 11.0F) }
+                            ?.let { mGoogleMap.moveCamera(it) }
+
+                        mGoogleMap.isMyLocationEnabled = true
                     }
 
                 } else {

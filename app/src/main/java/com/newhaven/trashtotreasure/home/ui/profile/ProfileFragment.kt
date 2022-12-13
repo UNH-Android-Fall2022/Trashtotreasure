@@ -110,7 +110,7 @@ class ProfileFragment : Fragment() {
             binding.tvHome.text = profilee.landline
         }
         if (profilee.profilePath!="") {
-            FirebaseStorageUtil.pathToReference(profilee.profilePath).downloadUrl.addOnSuccessListener {
+            ProfileUtil.pathToReference(profilee.profilePath).downloadUrl.addOnSuccessListener {
                 Glide.with(this).load(it.toString()).into(binding.profileImage)
             }.addOnFailureListener {
 
@@ -161,7 +161,7 @@ class ProfileFragment : Fragment() {
                 selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
                 val selectedImageBytes = outputStream.toByteArray()
                 binding.progressCircular.visibility = View.VISIBLE
-                FirebaseStorageUtil.uploadProfilePhoto(selectedImageBytes) { imagePath ->
+                ProfileUtil.uploadProfilePhoto(selectedImageBytes) { imagePath ->
                     profilePath = imagePath
                     FirebaseFirestore.getInstance().collection(Constants.PROFILEDETAILS).document(FirebaseAuth.getInstance().currentUser?.uid.toString()).update("profileimg",profilePath).addOnSuccessListener {
                         binding.progressCircular.visibility = View.GONE
@@ -172,7 +172,7 @@ class ProfileFragment : Fragment() {
                             .show()
                     }
 
-                    FirebaseStorageUtil.pathToReference(imagePath).downloadUrl.addOnSuccessListener {
+                    ProfileUtil.pathToReference(imagePath).downloadUrl.addOnSuccessListener {
                         Glide.with(this).load(it.toString()).into(binding.profileImage)
                     }.addOnFailureListener {
 

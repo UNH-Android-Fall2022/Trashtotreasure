@@ -73,7 +73,7 @@
             android:background="@drawable/et_background"
             android:hint="@string/contact_number"
             android:importantForAutofill="no"
-            android:inputType="text" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/et_behalf"

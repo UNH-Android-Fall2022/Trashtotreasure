@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/chatFragment2"
-        android:name="com.newhaven.trashtotreasure.home.ui.messages.ChatFragment"
+        android:name="com.newhaven.trashtotreasure.home.ui.contactus.ContactUsFragment"
         android:label="ChatFragment"
         tools:layout="@layout/fragment_chat"/>
 

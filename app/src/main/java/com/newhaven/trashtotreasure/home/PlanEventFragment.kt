@@ -1,18 +1,23 @@
 package com.newhaven.trashtotreasure.home
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.newhaven.trashtotreasure.R
+import com.newhaven.trashtotreasure.home.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_plan_event.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,6 +46,7 @@ class PlanEventFragment : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+           // checkLocationPermission()
         }
     }
 
@@ -52,6 +58,7 @@ class PlanEventFragment : Fragment() {
 
         val view =  inflater.inflate(R.layout.fragment_plan_event, container, false)
         setup(view)
+        checkLocationPermission()
         return view
     }
 
@@ -107,5 +114,48 @@ class PlanEventFragment : Fragment() {
         val myFormat = "MM/dd/yyyy"
         val dateFormat = SimpleDateFormat(myFormat, Locale.US)
         view.etDate?.setText(dateFormat.format(myCalendar.time))
+    }
+
+    private fun checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                activity as TrashToTreasure,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity as TrashToTreasure,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                AlertDialog.Builder(activity as TrashToTreasure)
+                    .setTitle("Location Permission Needed")
+                    .setMessage("This app needs the Location permission, please accept to use location functionality")
+                    .setPositiveButton(
+                        "OK"
+                    ) { _, _ ->
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(
+                            activity as TrashToTreasure,
+                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            HomeFragment.MY_PERMISSIONS_REQUEST_LOCATION
+                        )
+                    }
+                    .create()
+                    .show()
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    activity as TrashToTreasure,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    HomeFragment.MY_PERMISSIONS_REQUEST_LOCATION
+                )
+            }
+        }
     }
 }
