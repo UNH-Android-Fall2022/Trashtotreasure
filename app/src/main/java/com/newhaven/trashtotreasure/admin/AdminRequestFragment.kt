@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.newhaven.trashtotreasure.AdminActivity
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentAdminRequestBinding
@@ -138,6 +139,18 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
 
     override fun onDriverClick(eid: String) {
         showDriverDialog(eid)
+    }
+
+    override fun onDeclineClick(eid: String) {
+        binding.progressCircular.visibility = View.VISIBLE
+        FirebaseFirestore.getInstance().collection(Constants.EVENTDETAILS).document(eid).delete().addOnSuccessListener {
+            binding.progressCircular.visibility = View.GONE
+            getRequestList()
+            adapter.notifyDataSetChanged()
+        }.addOnFailureListener {
+            binding.progressCircular.visibility = View.GONE
+            Toast.makeText(requireContext(), "failed to decline", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showDriverDialog(eid: String) {

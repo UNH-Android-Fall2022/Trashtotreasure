@@ -88,6 +88,10 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
     override fun onDriverClick(eid: String) {
     }
 
+    override fun onDeclineClick(eid: String) {
+
+    }
+
 
 }
 

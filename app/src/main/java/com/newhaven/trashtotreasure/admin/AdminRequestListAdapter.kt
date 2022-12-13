@@ -17,9 +17,8 @@ class AdminRequestListAdapter(
     val context: Context,
     val eventList: List<Event>,
     val onContactUsClick: OnContactUsClick
-    ) :
-    RecyclerView.Adapter<AdminRequestListAdapter.VHViewHolder>(){
-
+) :
+    RecyclerView.Adapter<AdminRequestListAdapter.VHViewHolder>() {
 
     class VHViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val eId: TextView = itemView.findViewById(R.id.tv_reqId)
@@ -41,21 +40,19 @@ class AdminRequestListAdapter(
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: VHViewHolder, position: Int) {
-
-
         val ItemsViewModel = eventList[position]
-
-        // sets the image to the imageview from our itemHolder class
-
-
         // sets the text to the textview from our itemHolder class
         holder.eId.text = "${ItemsViewModel.eId}"
         holder.eName.text = "${ItemsViewModel.name}"
         holder.eAddress.text = "${ItemsViewModel.address}"
         holder.eContact.text = "${ItemsViewModel.contact}"
-        if (ItemsViewModel.isApproved) holder.eStatus.text = "Approved" else {
+        if (ItemsViewModel.isApproved) {
+            holder.eStatus.text = "Approved"
+            holder.eDriver.text = "Assign Rider"
+        } else {
             holder.eStatus.text = "Approve"
-            holder.eStatus.background = context.getDrawable(R.drawable.btn_red)
+            holder.eDriver.background = context.getDrawable(R.drawable.btn_red)
+            holder.eDriver.text = "Decline"
         }
 
         val eventDetails = hashMapOf(
@@ -67,22 +64,24 @@ class AdminRequestListAdapter(
             "isApproved" to !ItemsViewModel.isApproved
         )
         holder.eStatus.setOnClickListener {
-            onContactUsClick.onApproveClick(ItemsViewModel.eId,eventDetails as HashMap<String, Any> /* = java.util.HashMap<kotlin.String, kotlin.Any> */)
+            onContactUsClick.onApproveClick(
+                ItemsViewModel.eId,
+                eventDetails as HashMap<String, Any> /* = java.util.HashMap<kotlin.String, kotlin.Any> */
+            )
         }
 
         holder.tvContact.setOnClickListener {
-            onContactUsClick.onClick(ItemsViewModel.eId,ItemsViewModel.uId)
+            onContactUsClick.onClick(ItemsViewModel.eId, ItemsViewModel.uId)
         }
 
 
         holder.eDriver.setOnClickListener {
-            if(ItemsViewModel.isApproved){
+            if (ItemsViewModel.isApproved) {
                 onContactUsClick.onDriverClick(ItemsViewModel.eId)
-            }else{
-                Toast.makeText(context, "Please approve request first.", Toast.LENGTH_SHORT).show()
+            } else {
+                onContactUsClick.onDeclineClick(ItemsViewModel.eId)
             }
         }
-       // notifyItemChanged(position)
     }
 
 

@@ -157,6 +157,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llMobile">
 
@@ -177,6 +178,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvContact"/>
 
+
             <TextView
                 android:id="@+id/status"
                 android:layout_width="0dp"
@@ -194,6 +196,7 @@
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/tvISApproved"
                 app:layout_constraintTop_toBottomOf="@id/tvContact" />
+
 
 
         </LinearLayout>
