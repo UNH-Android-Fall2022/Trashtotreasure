@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentChatBinding
+import com.newhaven.trashtotreasure.home.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,9 +23,9 @@ class ContactUsFragment : Fragment() {
     var user = auth.currentUser
     private val fireStoreInstance = FirebaseFirestore.getInstance()
     private var collectionType: String? = null
-    private val chatMessages = ArrayList<ContactUs>()
+    private val contactUsMessages = ArrayList<ContactUs>()
     private var chatRegistration: ListenerRegistration? = null
-    var eventId: String? = "user"
+    var eventId: String? = ""
     var myuuid: String? = null
     private var recieveruuid: String? = null
     private var startdate: String? = null
@@ -37,7 +38,6 @@ class ContactUsFragment : Fragment() {
         setHasOptionsMenu(true)
         eventId = arguments?.getString("eid")
         recieveruuid = arguments?.getString("uid")
-
     }
 
     override fun onCreateView(
@@ -62,13 +62,13 @@ class ContactUsFragment : Fragment() {
         setViewListeners()
     }
 
-    private fun setOneToOneChat(uid1: String, uid2: String): String {
-        return uid2 + uid1
+    private fun setChannel(user: String, eid: String): String {
+        return eid + user
     }
 
     private fun setViewListeners() {
         binding.buttonSend.setOnClickListener {
-            collectionType?.let { it1 -> sendChatMessage(it1) }
+            collectionType?.let { it1 -> sendMessage(it1) }
         }
     }
 
@@ -76,16 +76,15 @@ class ContactUsFragment : Fragment() {
         val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
         myuuid = sh?.getString("uuid", "")
         binding.listChat.layoutManager = LinearLayoutManager(requireContext())
-        val isAdmin = sh?.getBoolean("isAdmin",false)
         val adapter = recieveruuid
-            ?.let { ContactUsAdapter(chatMessages, it, "admin", false, null,requireContext()) }
+            ?.let { ContactUsAdapter(contactUsMessages, it, "admin") }
         binding.listChat.adapter = adapter
-        binding.listChat.scrollToPosition(chatMessages.size - 1)
-        collectionType = eventId?.let { recieveruuid?.let { it1 -> setOneToOneChat(it, it1) } }
-        collectionType?.let { listenForChatMessages(it) }
+        binding.listChat.scrollToPosition(contactUsMessages.size - 1)
+        collectionType = eventId?.let { recieveruuid?.let { it1 -> setChannel(it, it1) } }
+        collectionType?.let { listenForMessages(it) }
     }
 
-    private fun listenForChatMessages(collectionType: String) {
+    private fun listenForMessages(collectionType: String) {
         chatRegistration =
             fireStoreInstance.collection("contactus").document(collectionType).collection("messages")
                 .orderBy(
@@ -95,9 +94,9 @@ class ContactUsFragment : Fragment() {
                     if (messageSnapshot == null || messageSnapshot.isEmpty) {
                         return@addSnapshotListener
                     }
-                    chatMessages.clear()
+                    contactUsMessages.clear()
                     for (messageDocument in messageSnapshot.documents) {
-                        chatMessages.add(
+                        contactUsMessages.add(
                             ContactUs(
                                 messageDocument["text"] as? String,
                                 messageDocument["user"] as? String,
@@ -111,10 +110,10 @@ class ContactUsFragment : Fragment() {
                         )
                     }
                     binding.listChat.adapter?.notifyDataSetChanged()
-                    binding.listChat.scrollToPosition(chatMessages.size - 1)
+                    binding.listChat.scrollToPosition(contactUsMessages.size - 1)
                 }
     }
-    private fun sendChatMessage(collectionType: String) {
+    private fun sendMessage(collectionType: String) {
         val message = binding.edittextChat.text.toString()
         binding.edittextChat.setText("")
         val sh = activity?.getSharedPreferences("MySharedPref", AppCompatActivity.MODE_PRIVATE)
@@ -126,25 +125,17 @@ class ContactUsFragment : Fragment() {
             fireStoreInstance.collection("contactus").document(collectionType).collection("messages")
                 .add(
                     mapOf(
-                        Pair("text", message.trim()),
-                        Pair("user", user?.uid),
-                        Pair("reciever", eventId),
-                        Pair("timestamp", Timestamp.now()),
-                        Pair("username", user?.displayName),
-                        Pair("time", currentTime),
-                        Pair("sentDate", startdate),
-                        Pair("isAdmin",isAdmin)
+                        Pair(Constants.TEXT, message.trim()),
+                        Pair(Constants.USER, user?.uid),
+                        Pair(Constants.RECIEVER, eventId),
+                        Pair(Constants.TIMESTAMP, Timestamp.now()),
+                        Pair(Constants.USERNAME, user?.displayName),
+                        Pair(Constants.TIME, currentTime),
+                        Pair(Constants.SENTDATE, startdate),
+                        Pair(Constants.ISADMIN,isAdmin)
                     )
                 ).addOnSuccessListener {
-
-                    fireStoreInstance.collection("contactus").document(collectionType)
-                        .collection("messages").document(
-                            it.id
-                        ).get().addOnSuccessListener { documentSnapshot ->
-                            Log.d("Message","Inserted")
-                        }
-                    it.id
-
+                Log.d("message","inserted")
                 }
         }
     }
