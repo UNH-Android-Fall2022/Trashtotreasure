@@ -63,12 +63,16 @@ class VenueDetailsFragment : Fragment() {
         val root: View = binding.root
         binding.tvAddress.text = "Address : $flat,$land,$city,\n$country,$pin"
         binding.venueSubmit.setOnClickListener {
-            if(binding.etName.text.isNotEmpty() && binding.etContact.text.isNotEmpty() && binding.etBehalf.text.isNotEmpty()) {
-                submitEventInfo(
-                    addressDetails = AddressDetails(flat, land, city, country, pin),
-                    binding.etName.text.toString(),
-                    binding.etContact.text.toString()
-                )
+            if(binding.etName.text.isNotEmpty() && binding.etContact.text.isNotEmpty() && binding.etBehalf.text.isNotEmpty()  ) {
+                if(foodImg!= "") {
+                    submitEventInfo(
+                        addressDetails = AddressDetails(flat, land, city, country, pin),
+                        binding.etName.text.toString(),
+                        binding.etContact.text.toString()
+                    )
+                }else{
+                    Toast.makeText(requireContext(), "please add photo first.", Toast.LENGTH_SHORT).show()
+                }
             }else{
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
             }
@@ -153,6 +157,7 @@ class VenueDetailsFragment : Fragment() {
                 binding.progressCircular.visibility = View.VISIBLE
                 ProfileUtil.uploadFoodImage(selectedImageBytes) { imagePath ->
                     foodImg = imagePath
+                    binding.progressCircular.visibility = View.GONE
                     Toast.makeText(requireContext(), "Image uploaded successfully", Toast.LENGTH_SHORT).show()
                 }
 
