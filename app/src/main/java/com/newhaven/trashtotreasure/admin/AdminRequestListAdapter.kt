@@ -28,6 +28,7 @@ class AdminRequestListAdapter(
         val eStatus: TextView = itemView.findViewById(R.id.tvISApproved)
         val eDriver: TextView = itemView.findViewById(R.id.status)
         val tvContact: TextView = itemView.findViewById(R.id.contactUs)
+        val tvImgFiles: TextView = itemView.findViewById(R.id.tvImageFiles)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHViewHolder {
@@ -61,6 +62,7 @@ class AdminRequestListAdapter(
             "name" to ItemsViewModel.name,
             "contact" to ItemsViewModel.contact,
             "address" to ItemsViewModel.address,
+            "photoimg" to ItemsViewModel.foodImg,
             "isApproved" to !ItemsViewModel.isApproved
         )
         holder.eStatus.setOnClickListener {
@@ -81,6 +83,9 @@ class AdminRequestListAdapter(
             } else {
                 onContactUsClick.onDeclineClick(ItemsViewModel.eId)
             }
+        }
+        holder.tvImgFiles.setOnClickListener {
+            onContactUsClick.onViewClick(ItemsViewModel.foodImg)
         }
     }
 

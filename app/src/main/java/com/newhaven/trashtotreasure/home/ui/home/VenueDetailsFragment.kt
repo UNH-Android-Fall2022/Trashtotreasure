@@ -1,7 +1,13 @@
 package com.newhaven.trashtotreasure.home.ui.home
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +18,8 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -19,6 +27,9 @@ import com.newhaven.trashtotreasure.R
 import com.newhaven.trashtotreasure.databinding.FragmentVenueDetailsBinding
 import com.newhaven.trashtotreasure.home.Constants
 import com.newhaven.trashtotreasure.home.TrashToTreasure
+import com.newhaven.trashtotreasure.home.ui.profile.ProfileFragment
+import com.newhaven.trashtotreasure.home.ui.profile.ProfileUtil
+import java.io.ByteArrayOutputStream
 
 class VenueDetailsFragment : Fragment() {
 
@@ -29,8 +40,13 @@ class VenueDetailsFragment : Fragment() {
     private var city = ""
     private var country = ""
     private var pin = ""
+    private var foodImg = ""
     private var db : FirebaseFirestore? =null
     val user = Firebase.auth.currentUser
+
+    companion object{
+        private const val pic_id = 12
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +73,11 @@ class VenueDetailsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please fill all fields.", Toast.LENGTH_SHORT).show()
             }
         }
+        binding.addPhotos.setOnClickListener {
+            val camera_intent =
+                Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(camera_intent, pic_id)
+        }
 
      return root
     }
@@ -69,6 +90,7 @@ class VenueDetailsFragment : Fragment() {
             "name" to name,
             "contact" to contact,
             "address" to addressDetails.toString(),
+            "photoimg" to foodImg,
             "isApproved" to false
         )
         binding.progressCircular.visibility = View.VISIBLE
@@ -102,5 +124,52 @@ class VenueDetailsFragment : Fragment() {
         dialog.show();
     }
 
+
+
     private fun idGenerator() =(100000..999999).random()
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // Match the request 'pic id with requestCode
+        if(resultCode != Activity.RESULT_CANCELED) {
+            if (requestCode == pic_id) {
+                // BitMap is data structure of image file which store the image in memory
+                val photo = data!!.extras!!["data"]
+                // Set the image in imageview for display
+                // click_image_id.setImageBitmap(photo)
+
+                val selectedImagePath =
+                    context?.let { getImageUri(it, data.extras!!["data"] as Bitmap) }
+
+
+                val selectedImageBmp =
+                    MediaStore.Images.Media.getBitmap(context?.contentResolver, selectedImagePath)
+
+                val outputStream = ByteArrayOutputStream()
+
+                selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                val selectedImageBytes = outputStream.toByteArray()
+                binding.progressCircular.visibility = View.VISIBLE
+                ProfileUtil.uploadFoodImage(selectedImageBytes) { imagePath ->
+                    foodImg = imagePath
+                    Toast.makeText(requireContext(), "Image uploaded successfully", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+    }
+
+
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.contentResolver,
+            inImage,
+            "Title",
+            null
+        )
+        return Uri.parse(path)
+    }
 }

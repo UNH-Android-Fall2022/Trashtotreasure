@@ -8,13 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -25,17 +23,12 @@ import com.newhaven.trashtotreasure.home.Constants
 import com.newhaven.trashtotreasure.home.TrashToTreasure
 import com.newhaven.trashtotreasure.home.ui.myRequest.Event
 import com.newhaven.trashtotreasure.home.ui.myRequest.OnContactUsClick
+import com.newhaven.trashtotreasure.home.ui.profile.ProfileUtil
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AdminRequestFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AdminRequestFragment : Fragment(),OnContactUsClick {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -79,6 +72,7 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
                                     documents.data?.get("name").toString(),
                                     documents.data?.get("contact").toString(),
                                     documents.data?.get("address").toString(),
+                                    documents.data?.get("photoimg").toString(),
                                     documents.data?.get("isApproved") as Boolean
                                 )
                             )
@@ -153,6 +147,10 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
         }
     }
 
+    override fun onViewClick(img: String) {
+       showImgDialog(img)
+    }
+
     private fun showDriverDialog(eid: String) {
 
         val dialog = Dialog(activity as AdminActivity)
@@ -187,5 +185,24 @@ class AdminRequestFragment : Fragment(),OnContactUsClick {
 
         dialog.setCancelable(true)
     }
+    private fun showImgDialog(img:String){
+        val dialog = Dialog(activity as AdminActivity)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_food);
+        val ivImg = dialog.findViewById<ImageView>(R.id.ivImg)
+        val progress = dialog.findViewById<ProgressBar>(R.id.progress_circular)
+        progress.visibility = View.VISIBLE
+        ProfileUtil.pathToReference(img).downloadUrl.addOnSuccessListener {
+            Log.d("url",it.toString())
+            progress.visibility = View.GONE
+            Glide.with(this).load(it.toString()).into(ivImg)
+        }.addOnFailureListener {
+            progress.visibility = View.GONE
+        }
+        dialog.show();
 
+        dialog.setCancelable(true)
+
+    }
 }

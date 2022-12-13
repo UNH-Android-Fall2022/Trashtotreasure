@@ -137,7 +137,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog);
-
         val etFlatNo = dialog.findViewById<EditText>(R.id.et_flat_no)
         val etCity = dialog.findViewById<EditText>(R.id.et_city)
         val etCountry = dialog.findViewById<EditText>(R.id.et_country)

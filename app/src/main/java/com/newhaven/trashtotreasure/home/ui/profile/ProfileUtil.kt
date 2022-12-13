@@ -23,5 +23,14 @@ object ProfileUtil {
                 }
     }
 
+    fun uploadFoodImage(imageBytes: ByteArray,
+                           onSuccess: (imagePath: String) -> Unit) {
+        val ref = currentUserRef.child("event/${UUID.nameUUIDFromBytes(imageBytes)}")
+        ref.putBytes(imageBytes)
+                .addOnSuccessListener {
+                    onSuccess(ref.path)
+                }
+    }
+
     fun pathToReference(path: String) = storageInstance.getReference(path)
 }

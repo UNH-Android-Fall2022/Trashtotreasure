@@ -8,4 +8,6 @@ interface OnContactUsClick {
     fun onDriverClick(eid: String)
 
     fun onDeclineClick(eid: String)
+
+    fun onViewClick(img: String)
 }

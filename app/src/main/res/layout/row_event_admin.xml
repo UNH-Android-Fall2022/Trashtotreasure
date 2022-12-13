@@ -153,13 +153,46 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llMobile">
+            <TextView
+                android:id="@+id/tvImage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/image"
+                android:layout_weight="0.2"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/tvImageFiles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="0.8"
+                android:layout_marginTop="5dp"
+                android:text="@string/click"
+                android:textStyle="italic"
+                android:textColor="@color/purple_500"
+                app:layout_constraintStart_toEndOf="@id/tvContact"
+                app:layout_constraintTop_toBottomOf="@id/tvAddress" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/llStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llMobile">
+            app:layout_constraintTop_toBottomOf="@id/llImages">
 
             <TextView
                 android:id="@+id/tvISApproved"

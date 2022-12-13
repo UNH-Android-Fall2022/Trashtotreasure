@@ -294,5 +294,8 @@ class ProfileFragment : Fragment() {
         private const val pic_id = 1
     }
 
+    private fun  addPhotos(){
+
+    }
 
 }

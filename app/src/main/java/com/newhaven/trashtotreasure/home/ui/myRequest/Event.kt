@@ -6,5 +6,6 @@ data class Event(
      val name: String,
      val contact: String,
      val address: String,
+     val foodImg: String,
      val isApproved: Boolean
 )

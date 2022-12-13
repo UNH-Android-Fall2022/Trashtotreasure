@@ -53,6 +53,7 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
                                     documents.data?.get("name").toString(),
                                     documents.data?.get("contact").toString(),
                                     documents.data?.get("address").toString(),
+                                    documents.data?.get("photoimg").toString(),
                                     documents.data?.get("isApproved") as Boolean
                                 )
                             )
@@ -89,6 +90,10 @@ class MyRequestFragment : Fragment() ,OnContactUsClick{
     }
 
     override fun onDeclineClick(eid: String) {
+
+    }
+
+    override fun onViewClick(img: String) {
 
     }
 

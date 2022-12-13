@@ -15,7 +15,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/waste"
-
         />
 
 
@@ -92,6 +91,8 @@
             android:importantForAutofill="no"
             android:inputType="text" />
 
+
+
         <TextView
             android:id="@+id/tv_address"
             android:layout_width="match_parent"
@@ -109,10 +110,20 @@
 
 
         <Button
-            android:id="@+id/venue_submit"
+            android:id="@+id/addPhotos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_address"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:text="@string/add"/>
+
+        <Button
+            android:id="@+id/venue_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/addPhotos"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="20dp"

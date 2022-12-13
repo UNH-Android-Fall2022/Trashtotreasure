@@ -51,4 +51,7 @@
     <string name="rider">Assign Rider</string>
     <string name="assign_driver">Assign Driver</string>
     <string name="drivername">DriverName</string>
+    <string name="add">Add Photos</string>
+    <string name="image"><b>Food Items :</b></string>
+    <string name="click">Click here to view Images</string>
 </resources>
